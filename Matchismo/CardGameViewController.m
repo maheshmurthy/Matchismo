@@ -30,6 +30,13 @@
     return _game;
 }
 
+- (IBAction)dealCards:(id)sender {
+    _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
+                                              usingDeck: [[PlayingCardDeck alloc]init]];
+    self.flipCount = 0;
+    [self updateUI];
+}
+
 - (void) setFlipCount:(int)flipCount {
     _flipCount = flipCount;
     self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d", self.flipCount];
@@ -57,9 +64,9 @@
     } else if (self.game.flippedCards.count == 2) {
         Card *card1 = self.game.flippedCards[0];
         Card *card2 = self.game.flippedCards[1];
+        [self.resultLabel setNumberOfLines:0];
 
         if (self.game.flipScore < 0) {
-            [self.resultLabel setNumberOfLines:0];
             self.resultLabel.text = [NSString stringWithFormat:@"%@ and %@ don't match! %d point penalty!", card1.contents, card2.contents, abs(self.game.flipScore)];
         } else {
             self.resultLabel.text = [NSString stringWithFormat:@"Matched %@ and %@ for %d points!", card1.contents, card2.contents, self.game.flipScore];
