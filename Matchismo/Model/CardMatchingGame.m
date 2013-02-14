@@ -12,6 +12,8 @@
 
 @property (readwrite, nonatomic) int score;
 @property (strong, nonatomic) NSMutableArray *cards; //of cards
+@property (readwrite, nonatomic) int flipScore;
+@property (strong, nonatomic) NSMutableArray *flippedCards; //of cards
 @end
 
 
@@ -28,18 +30,24 @@
 
 - (void) flipCardAtIndex:(NSUInteger)index {
     Card *card = [self cardAtIndex:index];
-    
+    self.flippedCards = [[NSMutableArray alloc] init];
     if (card && !card.isUnplayable) {
         if (!card.isFaceUp) {
+            [self.flippedCards addObject:card];
+            self.flipScore = 0;
+
             for (Card *otherCard in self.cards) {
                 if (otherCard.isFaceUp && !otherCard.isUnplayable) {
+                    [self.flippedCards addObject:otherCard];
                     int matchScore = [card match:@[otherCard]];
                     if (matchScore) {
                         card.unplayable = YES;
                         otherCard.unplayable = YES;
-                        self.score += matchScore * MATCH_BONUS;
+                        self.flipScore = matchScore * MATCH_BONUS;
+                        self.score += self.flipScore;
                     } else {
                         otherCard.faceUp = NO;
+                        self.flipScore = -MISMATCH_PENALTY;
                         self.score -= MISMATCH_PENALTY;
                     }
                     break;

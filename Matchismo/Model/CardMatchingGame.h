@@ -22,4 +22,9 @@
 
 @property (readonly, nonatomic) int score;
 
+@property (readonly, nonatomic) int flipScore;
+
+@property (readonly, nonatomic) NSMutableArray *flippedCards;
+
+
 @end
