@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *resultLabel;
 @property (strong, nonatomic) CardMatchingGame *game;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *modeSwitcher;
 @end
 
 @implementation CardGameViewController
@@ -26,15 +27,26 @@
     if (!_game) {
         _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
                                                   usingDeck: [[PlayingCardDeck alloc]init]];
+        _game.gameMode = 2;
     }
     return _game;
 }
 
 - (IBAction)dealCards:(id)sender {
-    _game = [[CardMatchingGame alloc] initWithCardCount:[self.cardButtons count]
-                                              usingDeck: [[PlayingCardDeck alloc]init]];
+    int mode = self.game.gameMode;
+    _game = NULL;
     self.flipCount = 0;
+    self.game.gameMode = mode;
     [self updateUI];
+}
+
+- (IBAction)switchMode:(id)sender {
+    int index = [sender selectedSegmentIndex];
+    if (index == 0) {
+        self.game.gameMode = 2;
+    } else {
+        self.game.gameMode = 3;
+    }
 }
 
 - (void) setFlipCount:(int)flipCount {
@@ -48,6 +60,8 @@
 }
 
 - (void) updateUI {
+    [self.modeSwitcher setEnabled:!self.game.hasBegun];
+    
     for (UIButton *cardButton in self.cardButtons) {
         Card *card = [self.game cardAtIndex: [self.cardButtons indexOfObject:cardButton]];
         [cardButton setTitle:card.contents forState:UIControlStateSelected];
@@ -56,20 +70,24 @@
         cardButton.enabled = !card.isUnplayable;
         cardButton.alpha = card.isUnplayable ? 0.3 : 1.0;
     }
+    
+    NSMutableArray *stringCards = [[NSMutableArray alloc] init];
+    
+    for (Card *c in self.game.flippedCards) {
+        [stringCards addObject:c.contents];
+    }
+
     if (self.game.flippedCards.count == 0) {
         self.resultLabel.text = nil;
-    } else if (self.game.flippedCards.count == 1) {
-        Card *card = self.game.flippedCards[0];
-        self.resultLabel.text = [NSString stringWithFormat:@"Flipped up %@", card.contents];
-    } else if (self.game.flippedCards.count == 2) {
-        Card *card1 = self.game.flippedCards[0];
-        Card *card2 = self.game.flippedCards[1];
+    } else if (self.game.flippedCards.count <= self.game.gameMode - 1) {
+        self.resultLabel.text = [NSString stringWithFormat:@"Flipped up %@", [stringCards componentsJoinedByString:@ " "]];
+    } else if (self.game.flippedCards.count == self.game.gameMode) {
         [self.resultLabel setNumberOfLines:0];
 
         if (self.game.flipScore < 0) {
-            self.resultLabel.text = [NSString stringWithFormat:@"%@ and %@ don't match! %d point penalty!", card1.contents, card2.contents, abs(self.game.flipScore)];
+            self.resultLabel.text = [NSString stringWithFormat:@"%@ don't match! %d point penalty!", [stringCards componentsJoinedByString:@ " "], abs(self.game.flipScore)];
         } else {
-            self.resultLabel.text = [NSString stringWithFormat:@"Matched %@ and %@ for %d points!", card1.contents, card2.contents, self.game.flipScore];
+            self.resultLabel.text = [NSString stringWithFormat:@"Matched %@ for %d points!", [stringCards componentsJoinedByString:@ " "], self.game.flipScore];
         }
     }
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];

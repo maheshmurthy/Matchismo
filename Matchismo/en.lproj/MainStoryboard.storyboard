@@ -226,7 +226,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rT5-Gt-cEv">
-                                <rect key="frame" x="165" y="390" width="76" height="44"/>
+                                <rect key="frame" x="162" y="366" width="143" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Deal">
@@ -240,11 +240,23 @@
                                     <action selector="dealCards:" destination="2" eventType="touchUpInside" id="rqk-zX-she"/>
                                 </connections>
                             </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="PrC-ti-rkT">
+                                <rect key="frame" x="156" y="417" width="159" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="2-mode"/>
+                                    <segment title="3-mode"/>
+                                </segments>
+                                <connections>
+                                    <action selector="switchMode:" destination="2" eventType="valueChanged" id="786-ox-FW0"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="flipsLabel" destination="cYz-SQ-UvC" id="tGo-wX-XeO"/>
+                        <outlet property="modeSwitcher" destination="PrC-ti-rkT" id="Jm3-vJ-QyI"/>
                         <outlet property="resultLabel" destination="l34-dS-89t" id="Jh5-wT-bps"/>
                         <outlet property="scoreLabel" destination="F8I-Gg-2bZ" id="hfX-fy-1cf"/>
                         <outletCollection property="cardButtons" destination="Xaj-c1-0WW" id="Qds-ZM-60x"/>
@@ -267,7 +279,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="19" y="-271"/>
+            <point key="canvasLocation" x="30" y="-358"/>
         </scene>
     </scenes>
     <classes>
@@ -276,7 +288,9 @@
             <relationships>
                 <relationship kind="action" name="dealCards:"/>
                 <relationship kind="action" name="flipCard:" candidateClass="UIButton"/>
+                <relationship kind="action" name="switchMode:"/>
                 <relationship kind="outlet" name="flipsLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="modeSwitcher" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="resultLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="scoreLabel" candidateClass="UILabel"/>
                 <relationship kind="outletCollection" name="cardButtons" candidateClass="UIButton"/>

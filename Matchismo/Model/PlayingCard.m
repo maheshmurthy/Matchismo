@@ -40,26 +40,31 @@
 + (NSUInteger) maxRank { return [self rankStrings].count - 1;}
 
 
-
 - (void) setRank:(NSUInteger)rank {
     if (rank <= [PlayingCard maxRank]) {
         _rank = rank;
     }
 }
 
-
 - (int) match:(NSArray *)otherCards {
     int score = 0;
-    if (otherCards.count == 1) {
-        PlayingCard *card = [otherCards lastObject];
+    BOOL rankMatch = true;
+    BOOL suitMatch = true;
+    for (PlayingCard *card in otherCards) {
+        if (self.rank != card.rank) {
+            rankMatch = false;
+        }
+        if (![self.suit isEqualToString:card.suit]) {
+            suitMatch = false;
+        }
+        
         if (self.rank == card.rank) {
-            return 4;
+            score+= 4;
         } else if ([self.suit isEqualToString:card.suit]) {
-            return 1;
-        } else {
-            return 0;
+            score+= 1;
         }
     }
+    if (!rankMatch && !suitMatch) score = 0;
     return score;
 }
 

@@ -26,5 +26,8 @@
 
 @property (readonly, nonatomic) NSMutableArray *flippedCards;
 
+@property (nonatomic, readonly) BOOL hasBegun;
+
+@property (nonatomic) int gameMode;
 
 @end

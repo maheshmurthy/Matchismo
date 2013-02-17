@@ -20,5 +20,4 @@
 + (NSArray *) validSuits;
 
 
-
 @end
